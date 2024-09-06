@@ -1,0 +1,52 @@
+import numpy as np
+
+# Define keywords for positive and negative sentiment
+POSITIVE_WORDS = np.array(["amazing", "fantastic", "great", "love", "good", "wonderful"])
+NEGATIVE_WORDS = np.array(["terrible", "horrible", "bad", "worst", "awful", "disappointing"])
+
+# Function to calculate star rating based on sentiment keywords
+def review_to_rating(review):
+    words = np.array(review.lower().split())  # Split text into words and lowercase
+
+    # Count positive and negative keyword matches
+    positive_matches = np.intersect1d(words, POSITIVE_WORDS)
+    negative_matches = np.intersect1d(words, NEGATIVE_WORDS)
+
+    # Determine rating based on positive vs. negative word matches
+    sentiment_score = len(positive_matches) - len(negative_matches)
+
+    if sentiment_score >= 3:
+        return 5  # Very positive review
+    elif sentiment_score >= 1:
+        return 4  # Mostly positive
+    elif sentiment_score == 0:
+        return 3  # Neutral review
+    elif sentiment_score >= -2:
+        return 2  # Mostly negative
+    else:
+        return 1  # Very negative review
+
+# Analyze multiple reviews and calculate average rating
+def movie_review_analyzer():
+    total_rating = 0
+    count = 0
+    while True:
+        review = input("Enter a movie review (or 'done' to finish): ")
+        if review.lower() == 'done':
+            break
+        
+        rating = review_to_rating(review)
+        print(f"Star Rating: {rating}")
+        
+        total_rating += rating
+        count += 1
+    
+    # Calculate average rating
+    if count > 0:
+        avg_rating = total_rating / count
+        print(f"Average Movie Rating: {avg_rating:.1f} stars")
+    else:
+        print("No reviews provided.")
+
+# Run the movie review analyzer
+movie_review_analyzer()
